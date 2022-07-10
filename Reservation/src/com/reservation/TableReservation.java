@@ -4,16 +4,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Scanner;
 
-//import com.reservation.AllMethods.ID;
-import com.reservation.ReservationSystem.Reservation;
 
 
 
-public class TableReservation implements ReservationSystem, Serializable {
+public abstract class TableReservation implements ReservationSystem,Runnable, Serializable {
 	static ObjectOutputStream oos = null;
 	static ObjectInputStream ois = null;
 
@@ -44,11 +40,11 @@ public class TableReservation implements ReservationSystem, Serializable {
 			System.out.println(
 					"____________________________________________________________________________________________________________________________________________");
 
-			// try {
+			try {
 			int val = sc.nextInt();
-			// if (val > 9 && val < 0) {
-			// System.out.println("Enter Valid Number");
-			// }
+			 if (val > 9 && val < 0) {
+			 System.out.println("Enter Valid Number");
+			 }
 
 			switch (val) {
 			case 1:
@@ -59,18 +55,18 @@ public class TableReservation implements ReservationSystem, Serializable {
 				break;
 			case 3:
 				AllMethods.viewOrderByID();
+				break;
 			case 4:
 				AllMethods.deleteOrderByID();
+				break;
 
 			case 5:
-				System.out.println("Enter ID to Confirm");
-				String confirmID = sc.next();
-				AllMethods.confirmByRiD(confirmID);
+				
+				AllMethods.confirmByRiD();
 				break;
 			case 6:
-				System.out.println("Enter ID to Cancel");
-				String cancelID = sc.next();
-				AllMethods.cancelByRiD(cancelID);
+				
+				AllMethods.cancelByRiD();
 				break;
 			case 7:
 				System.out.println("Sort Reservation");
@@ -147,51 +143,33 @@ public class TableReservation implements ReservationSystem, Serializable {
 				default:
 					break;
 				}
-				
+				break;
 			case 8:
+				ReportGenaration thread = new ReportGenaration();
+				thread.run();
+				break;
 
-				System.out.println("******** Choose Report Type*********");
-				System.out.println("1.Export All");
-				System.out.println("2.Export By Status");
-				System.out.println("Enter Your Option");
-				int opt = scan.nextInt();
-				switch (opt) {
-				case 1:
-					//t.run();
-					AllMethods.generateReportAll();
-					break;
-				case 2:
-					System.out.println("******** Choose Status*********");
-					System.out.println("1.Booked");
-					System.out.println("2.Cancelled");
-					System.out.println("3.Confirmed");
-					int key1 = scan.nextInt();
-					switch (key1) {
-					case 1:
-						String opt1 = "Booked";
-
-						AllMethods.byStatus(opt1);
-						break;
-
-					case 2:
-						String opt2 = "Canceled";
-						AllMethods.byStatus(opt2);
-						break;
-					case 3:
-						String opt3 = "Confirmed";
-						AllMethods.byStatus(opt3);
-						break;
-					default:
-						break;
-					}
-				}
-			
-
-			default:
+			case 9:
+				System.out.println("___________________________________________________________________________________________________________________________________________");
+				System.out.println("                                                      THANK YOU");
+				System.out.println("___________________________________________________________________________________________________________________________________________");
+				System.exit(0);
+				
 				break;
 			}
 
 		}
-
+			catch (Exception e) {
+				System.out.println("Choose correct Option");
+			}
+			
 	}
+	}
+	
+	
+	
+		
+	
+	
+	
 }
