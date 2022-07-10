@@ -30,6 +30,7 @@ import com.reservation.ReservationSystem.Reservation;
 
 public class AllMethods {
 	private static final String dataFilePath = "C:/Users/Amaresh/Desktop/data.txt";
+	private static String generatePAth=null ;
 
 	static DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy:HH:mm:ssa");
 	static DateFormat formatter1 = new SimpleDateFormat("yyyy");
@@ -673,7 +674,7 @@ public class AllMethods {
 		}
 		 class descendingD implements Comparator<Reservation> {
 				@Override
-				public int compare(Reservation a, Reservation b) {
+				public int compare(Reservation b, Reservation a) {
 					return (int) (b.getTotalAmount()-a.getTaxAmount());
 				}
 			}
@@ -709,6 +710,77 @@ public class AllMethods {
 		
 	}
 
+	public static void generateReportAll() throws IOException {
+		ArrayList<Reservation> data = readReservationFile();
+		createFileStamp();
+		
+			FileWriter writer = new FileWriter(generatePAth, true);
+			Writer write = new BufferedWriter(writer);
 
+			try {
+				for (int i = 0; i < data.size(); i++) {
+					writer.write(data.get(i).toString() + "\n");
+				}
+				writer.close();
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		
+		
+		System.out.println("Do you Want to search more Y/N");
+		String qes = scan.next();
+		if (qes.equalsIgnoreCase("y")) {
+			viewOrderByID();
+		} else if (qes.equalsIgnoreCase("n")) {
+			return;
+		}
+	}
+
+
+	private static String createFileStamp() {
+		
+//		
+		try {
+			String filename = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + "Reservation _Report_" + ".txt";
+
+			File file = new File("C://Users//Amaresh//Documents//Reports//" + filename);
+			boolean value = file.createNewFile();
+			System.out.println(file.getAbsolutePath());
+			generatePAth = file.getAbsolutePath();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return generatePAth;
+	}
+
+	
+	public static void byStatus(String opt1) throws IOException {
+		ArrayList<Reservation> data = readReservationFile();
+		
+		createFileStamp();
+		
+		FileWriter filewriter = new FileWriter(generatePAth, true);
+		Writer rwrite = new BufferedWriter(filewriter);
+		
+		for (Reservation l : data) {
+			if((l.getStatus().equals(opt1))) {
+				System.out.println(l);
+				 filewriter.write(l + "\n");
+		}
+			
+		}
+		filewriter.close();
+		
+		System.out.println("Do you Want to search more Y/N");
+		String qes = scan.next();
+		if (qes.equalsIgnoreCase("y")) {
+			viewOrderByID();
+		} else if (qes.equalsIgnoreCase("n")) {
+			return;
+		}
+		
+	}
+	
 
 }
