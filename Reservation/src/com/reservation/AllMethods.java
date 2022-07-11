@@ -52,14 +52,18 @@ public class AllMethods {
 	static Iterator<Reservation> itr = data.iterator();
 
 	public static void addReservation() throws IOException, ClassNotFoundException {
-
-		do {
+		
+int flage=1;
+dolabel:
+		while(flage==1){
 
 			try {
+				//ArrayList<Reservation> data = new ArrayList();
+				scan.nextLine();
 				System.out.println(
 						"----------------------------------------------------------------------------------------------------------------");
 				System.out.println("Working Hour = " + currentDate.getHours());
-				if (currentDate.getHours() < 24 && currentDate.getHours() >= 0) {
+				if (currentDate.getHours() < 22 && currentDate.getHours() >= 0) {
 					System.out.println(
 							"----------------------------------------------------------------------------------------------------------------");
 					System.out.println("->>>>>>>>>>>>>>>>>>>>>>WE ARE BACK -> " + " Happy To Serve You");
@@ -95,7 +99,7 @@ public class AllMethods {
 						System.out.println("ID Length = " + eightDigitId.length());
 						// flag =0;
 					}
-					ArrayList<Reservation> data = readReservationFile();
+					ArrayList<Reservation> data = readWithoutPrinting();
 					for (Reservation r : data) {
 
 						if (r.getReservationId().equals(eightDigitId)) {
@@ -118,7 +122,8 @@ public class AllMethods {
 					reservationId = eightDigitId;
 				} else {
 					System.out.println("ID is to long:please enter 4 digits only");
-					addReservation();
+					//addReservation();
+					continue dolabel;
 				}
 
 				outer: while (true) {
@@ -222,29 +227,39 @@ public class AllMethods {
 				System.out.println(
 						"-------------------------------------------------------------------------------------------------------------------------------");
 				System.out.println("            Order Added Successfully         ");
-
+				writeReservationData(data);
+				data.clear();
+				//flage=0;
+				//break;
 			} catch (Exception e) {
 				System.out.println("We love's you bookings closed please come back tommorow");
 			}
 			System.out.println(
 					"---------------------------------------------------------------------------------------------------------------------------------");
-
-			writeReservationData(data);
-
 			System.out.println("                   Do you want to continue Yes/No                      ");
 
 			String qes = scan.next();
 			if (qes.equalsIgnoreCase("yes")) {
-				addReservation();
+				
+				scan.nextLine();
+				continue dolabel;
+				
+				//addReservation();
 			} else if (qes.equalsIgnoreCase("no")) {
-				// TableReservation.main(null);
+				//writeReservationData(data);
 				return;
+				//TableReservation.main(null);
+			//break;
 
 			}
-			// scan.close();
-		} while (true);
+		}
+			
 
-	}
+			
+			
+		} 
+
+	
 
 	static public ArrayList<Reservation> readReservationFile() {
 		ArrayList<Reservation> data = new ArrayList<Reservation>();
@@ -264,6 +279,10 @@ public class AllMethods {
 			double discountAmount = 0.0;
 			double taxAmount = 0.0;
 			double totalAmount = 0.0;
+			
+			System.out.println("Reservation_Id|" + " Name     |" +"   Discription      |" + " Reservation_Date           |"
+					+ "Adult|" + " Children|" + " Sub_T_Amnt   |" + " Tax_Amnt   |" + "Total_Ant   2|"+"    Status ");
+			System.out.println("______________________________________________________________________________________________________________________________________________________");
 
 			while (readfile.hasNextLine()) {
 				// System.out.println("Hii");
@@ -287,7 +306,7 @@ public class AllMethods {
 				data.add(tableReservation);
 				System.out.println(tableReservation);
 				System.out.println(
-						"---------------------------------------------------------------------------------------------------------------------------------------------");
+						"--------------------------------------------------------------------------------------------------------------------------------------------------------");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -296,13 +315,14 @@ public class AllMethods {
 
 	}
 
-	public static ArrayList<Reservation> getData() {
-		return AllMethods.data;
-	}
+//	public static ArrayList<Reservation> getData() {
+//		return AllMethods.data;
+//	}
 
-	public static void setData(ArrayList<Reservation> data) {
-		AllMethods.data = data;
-	}
+	
+//	public static void setData(ArrayList<Reservation> data) {
+//		AllMethods.data = data;
+//	}
 
 	public static void writeReservationData(ArrayList<Reservation> data) throws IOException {
 		FileWriter writer = new FileWriter(dataFilePath, true);
@@ -321,6 +341,8 @@ public class AllMethods {
 
 	public static void viewOrderByID() {
 		ArrayList<Reservation> data = readWithoutPrinting();
+		int flag = 1;
+		outer : while(flag==1) {
 		boolean found = false;
 		System.out.println("Enter ID to Search");
 		String ID = scan.nextLine();
@@ -330,7 +352,7 @@ public class AllMethods {
 		}
 		if (!(ar.contains(ID))) {
 			System.out.println("Not Found");
-			viewOrderByID();
+			continue outer;
 		}
 		for (Reservation l : data) {
 			if (l.getReservationId().equals((ID))) {
@@ -348,9 +370,11 @@ public class AllMethods {
 				System.out.println("Reservation Status ->" + l.getStatus());
 				System.out.println(
 						"---------------------------------------------------------------------------------------------------------------------------------");
-
+				flag = 0;
 			}
 
+		}
+	
 		}
 		System.out.println("Do you Want to search more Y/N");
 		String qes = scan.next();
@@ -361,8 +385,11 @@ public class AllMethods {
 		}
 
 	}
+	
 
 	public static void deleteOrderByID() throws IOException {
+		int flag = 1;
+		outer : while(flag ==1 ) {
 		ArrayList<Reservation> data = readWithoutPrinting();
 		
 		scan.nextLine();
@@ -379,7 +406,7 @@ public class AllMethods {
 
 		if (!(ar.contains(ID))) {
 			System.out.println("Not Found");
-			deleteOrderByID();
+			continue outer;
 		}
 
 		for (Reservation l : data) {
@@ -422,6 +449,8 @@ public class AllMethods {
 				"---------------------------------------------------------------------------------------------------------------------------------");
 
 		ar.clear();
+		flag=0;
+		}
 
 		System.out.println("Do you Want to Delete more Y/N");
 		String qes = scan.next();
@@ -438,6 +467,8 @@ public class AllMethods {
 	public static void confirmByRiD() throws IOException {
 		ArrayList<Reservation> data = readWithoutPrinting();
 		// boolean found = false;
+		int flag = 1;
+	outer:	while(flag == 1) {
 		scan.nextLine();
 		System.out.println("Enter ID to Confirm");
 		String confirmID = scan.nextLine();
@@ -450,15 +481,18 @@ public class AllMethods {
 
 		if (!(ar.contains(confirmID))) {
 			System.out.println("Not Found");
-			return;
+			continue outer;
 		}
 
 		for (Reservation l : data) {
 			// System.out.println(l);
-			if (l.getStatus().contentEquals("Confirmed")) {
+			if (l.getStatus().contentEquals("Confirmed") && l.getReservationId().equals(confirmID)) {
 				System.out.println("Already Confirmed");
 				break;
-			} else
+			} else if (l.getStatus().contentEquals("Canceled") && l.getReservationId().equals(confirmID)) {
+				System.out.println("Already Cancelled Cant be mark as confirmed");
+				break;
+			}
 
 			if (l.getReservationId().equals((confirmID))) {
 
@@ -496,7 +530,8 @@ public class AllMethods {
 				"---------------------------------------------------------------------------------------------------------------------------------");
 
 		ar.clear();
-
+		flag=0;
+		}
 		System.out.println("Do you Want to Confirm more Y/N");
 		String qes = scan.next();
 		if (qes.equalsIgnoreCase("y")) {
@@ -510,29 +545,36 @@ public class AllMethods {
 	}
 
 	public static void cancelByRiD() throws IOException {
+		
 		ArrayList<Reservation> data = readWithoutPrinting();
-		scan.nextLine();
+		//System.out.println(data);
+		int flag =1;
+outer :		
+	while(flag == 1) {
+			
+		
+		
 		System.out.println("Enter ID to Cancel");
-		String cancelID = scan.next();
-		// boolean found = false;
-
-		ArrayList ar = new ArrayList();
+		String cancelID = scan.nextLine();
+		
+		ArrayList ar1 = new ArrayList();
 
 		for (Reservation l : data) {
-			ar.add(l.getReservationId());
+			ar1.add(l.getReservationId());
 		}
 
-		if (!(ar.contains(cancelID))) {
+		if (!(ar1.contains(cancelID))) {
 			System.out.println("Not Found");
-			return;
+			continue outer;
 		}
 
 		for (Reservation l : data) {
 			// System.out.println(l);
-			if (l.getStatus().contentEquals("Canceled")) {
+			if (l.getStatus().contentEquals("Canceled")&&(l.getReservationId().contentEquals(cancelID)) ) {
 				System.out.println("Already Canceled Cant be Changed");
-				break;
-			} else
+				continue outer;
+			}
+			else
 
 			if (l.getReservationId().equals((cancelID))) {
 				l.setStatus("Canceled");
@@ -557,6 +599,8 @@ public class AllMethods {
 				System.out.println("      Canceled Sucessfully            ");
 				System.out.println(
 						"---------------------------------------------------------------------------------------------------------------------------------");
+//				System.out.println("Reservation  ID = "+l.getReservationId()+" cancelled.");
+//				System.out.println("Amount  = "+l.getTotalAmount()+"  will refund within 24 hours");
 				break;
 			}
 
@@ -564,13 +608,14 @@ public class AllMethods {
 		clearFile();
 		writeReservationData(data);
 
-		ar.clear();
-
-		System.out.println("Do you Want to search more Y/N");
+		//ar1.clear();
+		flag = 0;
+	}
+		System.out.println("Do you Want to Cancel more Y/N");
 		String qes = scan.next();
 		if (qes.equalsIgnoreCase("y")) {
+			scan.nextLine();
 			cancelByRiD();
-			
 
 		} else if (qes.equalsIgnoreCase("n")) {
 			return;
@@ -606,6 +651,7 @@ public class AllMethods {
 		case 1:
 
 			ArrayList<Reservation> data = AllMethods.readReservationFile();
+			System.out.println("                                 After Sorting                          ");
 
 			System.out.println(
 					"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
@@ -614,11 +660,14 @@ public class AllMethods {
 			for (int i = 0; i < data.size(); i++) {
 				System.out.println(data.get(i));
 			}
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			System.out.println("                            RESERVATION ID -> Sorted Sucessfully -> In ASCENDING order");
 
 			break;
 		case 2:
 
 			ArrayList<Reservation> dataD = AllMethods.readReservationFile();
+			System.out.println("                                 After Sorting                          ");
 			System.out.println(
 					"---------------------------------------------------------------------------------------------------------------------------------");
 
@@ -627,6 +676,8 @@ public class AllMethods {
 			for (int i = 0; i < dataD.size(); i++) {
 				System.out.println(dataD.get(i));
 			}
+			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			System.out.println("                            RESERVATION ID -> Sorted Sucessfully -> In DESCENDING order");
 
 			break;
 		default:
@@ -655,26 +706,34 @@ public class AllMethods {
 		case 1:
 
 			ArrayList<Reservation> data = AllMethods.readReservationFile();
+			System.out.println("                                 After Sorting                          ");
 
 			System.out.println(
 					"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			
 			Collections.sort(data, new ascendingA());
 			for (int i = 0; i < data.size(); i++) {
 				System.out.println(data.get(i) + "\t");
 			}
-
+			System.out.println(
+					"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			System.out.println("                            RESERVATION DISCRIPTION -> Sorted Sucessfully -> In ASCENDING order");
 			break;
 		case 2:
 
 			ArrayList<Reservation> dataD = AllMethods.readReservationFile();
+			System.out.println("                                 After Sorting                          ");
 			System.out.println(
 					"---------------------------------------------------------------------------------------------------------------------------------");
-
+			
 			Collections.sort(dataD, new descendingD());
 			System.out.println(dataD.size());
 			for (int i = 0; i < dataD.size(); i++) {
 				System.out.println(dataD.get(i) + "\t");
 			}
+			System.out.println(
+					"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			System.out.println("                            RESERVATION Discription -> Sorted Sucessfully -> In DESCENDING order");
 
 			break;
 		default:
@@ -704,6 +763,7 @@ public class AllMethods {
 		case 1:
 
 			ArrayList<Reservation> data = AllMethods.readReservationFile();
+			System.out.println("                                 After Sorting                          ");
 
 			System.out.println(
 					"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
@@ -711,11 +771,14 @@ public class AllMethods {
 			for (int i = 0; i < data.size(); i++) {
 				System.out.println(data.get(i) + "\t");
 			}
-
+			System.out.println(
+					"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			System.out.println("                            RESERVATION DATE -> Sorted Sucessfully -> In ASCENDING order");
 			break;
 		case 2:
 
 			ArrayList<Reservation> dataD = AllMethods.readReservationFile();
+			System.out.println("                                 After Sorting                          ");
 			System.out.println(
 					"---------------------------------------------------------------------------------------------------------------------------------");
 
@@ -724,7 +787,9 @@ public class AllMethods {
 			for (int i = 0; i < dataD.size(); i++) {
 				System.out.println(dataD.get(i) + "\t");
 			}
-
+			System.out.println(
+					"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			System.out.println("                            RESERVATION DATE -> Sorted Sucessfully -> In DESCENDING order");
 			break;
 		default:
 			break;
@@ -754,6 +819,7 @@ public class AllMethods {
 		case 1:
 
 			ArrayList<Reservation> data = AllMethods.readReservationFile();
+			System.out.println("                                 After Sorting                          ");
 
 			System.out.println(
 					"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
@@ -761,18 +827,26 @@ public class AllMethods {
 			for (int i = 0; i < data.size(); i++) {
 				System.out.println(data.get(i) + "\t");
 			}
+			System.out.println(
+					"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			System.out.println("                            RESERVATION TOTAL AMOUNT -> Sorted Sucessfully -> In ASCENDING order");
 
 			break;
 		case 2:
 
 			ArrayList<Reservation> dataD = AllMethods.readReservationFile();
+			System.out.println("                                 After Sorting                          ");
+			System.out.println(
+					"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
 			Collections.sort(dataD, new descendingD());
 			System.out.println(dataD.size());
 			for (int i = 0; i < dataD.size(); i++) {
 				System.out.println(dataD.get(i) + "\t");
 			}
-
+			System.out.println(
+					"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			System.out.println("                            RESERVATION TOTAL AMOUNT -> Sorted Sucessfully -> In DESCENDING order");
 			break;
 		default:
 			break;
@@ -818,9 +892,7 @@ public class AllMethods {
 
 	public static void byStatus(String opt1) throws IOException {
 		ArrayList<Reservation> data = readReservationFile();
-
 		createFileStamp();
-
 		FileWriter filewriter = new FileWriter(generatePAth, true);
 		Writer rwrite = new BufferedWriter(filewriter);
 
@@ -829,19 +901,15 @@ public class AllMethods {
 				System.out.println(l);
 				filewriter.write(l + "\n");
 			}
-
 		}
 		filewriter.close();
-
-		
-
 	}
 	
 	static public ArrayList<Reservation> readWithoutPrinting() {
 		ArrayList<Reservation> data = new ArrayList<Reservation>();
 		try {
 
-			File file = new File("C:\\Users\\Amaresh\\Desktop\\data.txt"); // file to be read
+			File file = new File("C:\\Users\\Amaresh\\Desktop\\data.txt"); 
 			Scanner readfile = new Scanner(file);
 			StringTokenizer token = null;
 			String reservationId = "";
@@ -857,10 +925,8 @@ public class AllMethods {
 			double totalAmount = 0.0;
 
 			while (readfile.hasNextLine()) {
-				// System.out.println("Hii");
 				token = new StringTokenizer(readfile.nextLine(), "\t");
 				reservationId = token.nextToken();
-				// System.out.println(reservationId);
 				customerName = token.nextToken();
 				reservationDescription = token.nextToken();
 				reservationDate = LocalDateTime.parse(token.nextToken(), DateTimeFormatter.ISO_DATE_TIME);
