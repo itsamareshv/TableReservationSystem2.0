@@ -1,17 +1,14 @@
 package com.reservation;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Scanner;
 
 
 
 
-public abstract class TableReservation implements ReservationSystem,Runnable, Serializable {
-	static ObjectOutputStream oos = null;
-	static ObjectInputStream ois = null;
+public abstract class TableReservation implements  ReservationSystem ,Runnable, Serializable {
+	
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
 

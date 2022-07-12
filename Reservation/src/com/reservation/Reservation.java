@@ -1,8 +1,6 @@
 package com.reservation;
 
 import java.io.File;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -10,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Scanner;
 
-interface ReservationSystem {
+
 
 	public class Reservation implements Serializable {
 	  private String reservationId;
@@ -26,9 +24,6 @@ interface ReservationSystem {
 		private double totalAmount;
 		private static final String dataFilePath = "C:/Users/Amaresh/git/trs/Table_Reservation_System/reports/table_reservation_data.txt";
 		static File file = new File(dataFilePath);
-
-		static ObjectOutputStream oos = null;
-		static ObjectInputStream ois = null;
 		DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy:HH:mm:ssa");
 
 		Date now = new Date();
@@ -149,4 +144,4 @@ interface ReservationSystem {
 		}
 
 	}
-}
+
