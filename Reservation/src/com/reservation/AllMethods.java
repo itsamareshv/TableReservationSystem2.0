@@ -817,7 +817,7 @@ interface ReservationSystem {
 		}
 
 		public static void generateReportAll() throws IOException {
-			ArrayList<Reservation> data = readReservationFile();
+			ArrayList<Reservation> data = readWithoutPrinting();
 			createFileStamp();
 
 			FileWriter writer = new FileWriter(generatePAth, true);
@@ -871,20 +871,20 @@ interface ReservationSystem {
 		}
 
 		public static void byStatus(String opt1) throws IOException {
-			ArrayList<Reservation> data = readReservationFile();
+			ArrayList<Reservation> data = readWithoutPrinting();
 			
 		
 				
 			createFileStamp();
 			System.out.println("_______________________________________________________________________________________________________________________________________________________________________");
-			FileWriter writer = new FileWriter(dataFilePath,true);
+			FileWriter writer = new FileWriter(generatePAth,true);
 			Writer write = new BufferedWriter(writer);
 
 			
 			try {
 				for (Reservation reservationList : data) {
 					if ((reservationList.getStatus().equals(opt1))) {
-						System.out.println(reservationList);
+						//System.out.println(reservationList);
 						writer.write(reservationList + "\n");
 					}
 				}
